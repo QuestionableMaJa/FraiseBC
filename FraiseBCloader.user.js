@@ -18,6 +18,6 @@
   "use strict";
   var script = document.createElement("script");
   script.setAttribute("crossorigin", "anonymous");
-  script.src = "https://lunarkitsunify.github.io/MoonCEBC/MoonCEBC.js";
+  script.src = "https://majanames.github.io/FraiseBC/FraiseBC.js";
   document.head.appendChild(script);
 })();
