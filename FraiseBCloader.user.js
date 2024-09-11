@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name FraiseScript
+// @name FraiseBC
 // @namespace https://www.bondageprojects.com/
 // @version 1.0.0
 // @description A various silly scripts that Fraise makes
