@@ -1,1 +1,1 @@
-https://majanames.github.io/FraiseBC/FraiseBC.js
+https://majanames.github.io/FraiseBC/FraiseBCloader.user.js
