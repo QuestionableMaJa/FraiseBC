@@ -2,7 +2,7 @@
 // @name FraiseBC
 // @namespace https://www.bondageprojects.com/
 // @version 1.0.0
-// @description A various silly scripts that Fraise makes
+// @description A very silly script made by MaJaNamesuu
 // @author MaJaNamesuu
 // @match http://localhost:*/*
 // @match https://bondageprojects.elementfx.com/*
