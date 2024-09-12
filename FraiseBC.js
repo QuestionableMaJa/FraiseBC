@@ -37,7 +37,7 @@ function F_DataStore_initControls() {
 		fireignoreOn = false;
 		fcheatkeyOn = false;
 		spudfOn = false;
-    fautostruggleOn = false;
+		fautostruggleOn = false;
 		fmaxzoomValue = "";
 	} else {
 		fitemsOn = datas.fitemsOn;
@@ -58,7 +58,7 @@ function F_DataStore_saveControls() {
 		"fcheatkeyOn": fcheatkeyOn,
 		"spudfOn": spudfOn,
 		"fmaxzoomValue": fmaxzoomValue,
-    "fautostruggleOn": fautostruggleOn
+		"fautostruggleOn": fautostruggleOn
 	};
 	localStorage.setItem(F_DataStore_FraiseKey + "_" + Player.MemberNumber, JSON.stringify(controls));
 }
