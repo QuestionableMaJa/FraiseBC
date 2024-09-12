@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name FraiseBC
 // @namespace https://www.bondageprojects.com/
-// @version 2.3.1
+// @version 2.3.2
 // @description A various silly scripts that Fraise makes
 // @author MaJaNamesuu
 // @match http://localhost:*/*
@@ -285,6 +285,7 @@ CommandCombine([{
 			"<b>finteraction</b> = allows to interact regardless of equipped restraints.\n" +
 			"<b>fcheatkey</b> = allows allows to unlock (almost) any lock.\n" +
 			"<b>fstatus</b> = displays status of FraiseBC settings.\n" +
+			"<b>fautostruggle</b> = sets all struggle difficulty to 6(basically autoescape). \n" +
 			"<b>fenall</b> = enables all toggleable scripts On and Off</p>"
 		);
 	}
@@ -343,7 +344,7 @@ CommandCombine([{
 		showfcheatkeyStatus();
 		//sasaus permanent undeafen
 		showspudfStatus();
-    showfautostruggleStatus();
+		showfautostruggleStatus();
 		showfmaxzoomStatus();
 	}
 }])
