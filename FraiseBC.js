@@ -378,7 +378,6 @@ CommandCombine([{
 			finteractionOn = false;
 			fireignoreOn = false;
 			fcheatkeyOn = false;
-      fautostruggleOn = false;
 			F_DataStore_saveControls();
 			ChatRoomSendLocal(
 				"<p style='background-color:#81031b'><b>FraiseBC</b>: Every toggle is set to <b><i>--OFF--</i></b></p>"
@@ -388,7 +387,6 @@ CommandCombine([{
 			finteractionOn = true;
 			fireignoreOn = true;
 			fcheatkeyOn = true;
-      fautostruggleOn = true;
 			F_DataStore_saveControls();
 			ChatRoomSendLocal(
 				"<p style='background-color:#81031b'><b>FraiseBC</b>: Every toggle is set to <b><i>++ON++</i></b></p>"
@@ -431,13 +429,13 @@ CommandCombine([{
 			fautostruggleOn = false;
 			F_DataStore_saveControls();
 			ChatRoomSendLocal(
-				"<p style='background-color:#81031b'><b>FraiseBC</b>: You are now back to defaults when it comes to hearing</p>"
+				"<p style='background-color:#884571'><b>FraiseBC</b>: Struggling is set back to how it was</p>"
 			)
 		} else {
 			fautostruggleOn = true;
 			F_DataStore_saveControls();
 			ChatRoomSendLocal(
-				"<p style='background-color:#81031b'><b>FraiseBC</b>: You now 100% ignore all deafening effects.</p>"
+				"<p style='background-color:#884571'><b>FraiseBC</b>: Difficulty of removing restraints is now 6.</p>"
 			)
 		}
 		FraiseCommandToggles();
