@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name FraiseBC
 // @namespace https://www.bondageprojects.com/
-// @version 1.0.5
+// @version 1.0.6
 // @description A very silly script made by MaJaNamesuu
 // @author MaJaNamesuu
 // @match http://localhost:*/*
