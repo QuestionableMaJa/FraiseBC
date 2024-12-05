@@ -494,7 +494,6 @@ function FraiseCommandToggles() {
       if (PrevItem != null) {
         S = S + PrevItem.Difficulty-6;
         if (PrevItem.Difficulty != null) S = S - PrevItem.Difficulty;
-        if ((PrevItem.Property != null) && (PrevItem.Property.Difficulty != null)) S = S - PrevItem.Property.Difficulty;
       }
 
       var Timer = 0;
@@ -504,8 +503,8 @@ function FraiseCommandToggles() {
       if (InventoryCraftPropertyIs(PrevItem, "Malleable") || InventoryCraftPropertyIs(NextItem, "Malleable")) Timer = Timer * 0.5;
       if (InventoryCraftPropertyIs(PrevItem, "Rigid") || InventoryCraftPropertyIs(NextItem, "Rigid")) Timer = Timer * 2;
       if (Timer < 1) Timer = 1;
-
-      if ((PrevItem != null) && (NextItem == null) && InventoryItemHasEffect(PrevItem, "Lock", true) && DialogCanUnlock(C, PrevItem)) {
+	  
+	  if ((PrevItem != null) && (NextItem == null) && InventoryItemHasEffect(PrevItem, "Lock", true) && DialogCanUnlock(C, PrevItem)) {
         var Lock = InventoryGetLock(PrevItem);
         if ((Lock != null) && (Lock.Asset != null) && (Lock.Asset.RemoveTime != null)) Timer = Timer + Lock.Asset.RemoveTime;
       }
