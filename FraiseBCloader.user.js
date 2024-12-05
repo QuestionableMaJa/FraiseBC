@@ -18,6 +18,6 @@
   "use strict";
   var script = document.createElement("script");
   script.setAttribute("crossorigin", "anonymous");
-  script.src = "https://majanames.github.io/FraiseBC/FraiseBC.js?ts=${Date.now()}";
+  script.src = "https://majanames.github.io/FraiseBC/FraiseBC.js?v={(Date.now() / 10000).toFixed(0)}";
   document.head.appendChild(script);
 })();
