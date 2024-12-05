@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name FraiseBC
 // @namespace https://www.bondageprojects.com/
-// @version 1.0.6
+// @version 1.0.7
 // @description A very silly script made by MaJaNamesuu
 // @author MaJaNamesuu
 // @match http://localhost:*/*
@@ -14,10 +14,14 @@
 // @run-at document-end
 // ==/UserScript==
 
-(function () {
-  "use strict";
-  var script = document.createElement("script");
-  script.setAttribute("crossorigin", "anonymous");
-  script.src = "https://majanames.github.io/FraiseBC/FraiseBC.js?v={(Date.now() / 10000).toFixed(0)}";
-  document.head.appendChild(script);
-})();
+setTimeout(
+	function () {
+			let m = document.createElement("script");
+			m.setAttribute("language", "JavaScript");
+			m.setAttribute("crossorigin", "anonymous");
+			m.setAttribute("src", "https://majanames.github.io/FraiseBC/FraiseBC.js?_=" + Date.now());
+			m.onload = () => m.remove();
+			document.head.appendChild(m);
+	}, 
+        10000
+);
