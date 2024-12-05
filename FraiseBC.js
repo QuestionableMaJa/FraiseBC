@@ -20,7 +20,7 @@ var bcModSDK = function(){"use strict";const o="1.2.0";function e(o){alert("Mod 
 let modApi = bcModSdk.registerMod({
         name: 'FraiseBC',
         fullName: 'Fraise BC',
-        version: '2.3.4',
+        version: '2.3.5',
         repository: 'Private script for Fraise and Friends :p',
     });
 
