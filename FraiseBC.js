@@ -592,7 +592,7 @@ function FraiseCommandToggles() {
 		InventoryAllow = function(C, asset, prerequisites = asset.Prerequisite, setDialog = true, allowActivePose = asset.AllowActivePose) {
 			return true;
 		}
-		function AsylumGGTSControlItem(C, Item) {
+		AsylumGGTSControlItem = function(C, Item) {
 			return false;
 		}
 	} else {
@@ -640,8 +640,8 @@ function FraiseCommandToggles() {
 			// If no error message was found, we return TRUE, if a message was found, we can show it in the dialog
 			if (Msg && setDialog) DialogSetStatus(InterfaceTextGet(`Prerequisite${Msg}`), DialogTextDefaultDuration);
 			return !Msg;
-		}
-		function AsylumGGTSControlItem(C, Item) {
+		}	
+		AsylumGGTSControlItem = function(C, Item) {
 			let Level = AsylumGGTSGetLevel(C);
 			if (AsylumGGTSGetLevel(Player) > Level) Level = AsylumGGTSGetLevel(Player);
 			if (Level <= 0) return false;
