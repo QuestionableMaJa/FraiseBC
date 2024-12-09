@@ -592,6 +592,9 @@ function FraiseCommandToggles() {
 		InventoryAllow = function(C, asset, prerequisites = asset.Prerequisite, setDialog = true, allowActivePose = asset.AllowActivePose) {
 			return true;
 		}
+		AsylumGGTSControlItem = function(C, Item) {
+			return false;
+		}
 	} else {
 		InventoryAllow = function(C, asset, prerequisites = asset.Prerequisite, setDialog = true, allowActivePose = asset.AllowActivePose) {
 			// Prerequisite can be a string
@@ -638,6 +641,25 @@ function FraiseCommandToggles() {
 			if (Msg && setDialog) DialogSetStatus(InterfaceTextGet(`Prerequisite${Msg}`), DialogTextDefaultDuration);
 			return !Msg;
 		}
+		function AsylumGGTSControlItem(C, Item) {
+			let Level = AsylumGGTSGetLevel(C);
+			if (AsylumGGTSGetLevel(Player) > Level) Level = AsylumGGTSGetLevel(Player);
+			if (Level <= 0) return false;
+			if ((Level <= 2) && (LogValue("Isolated", "Asylum") < CurrentTime)) {
+				if (CurrentScreen != "ChatRoom") return false;
+				if (ChatRoomSpace !== "Asylum") return false;
+				if ((ChatRoomData == null) || (ChatRoomData.Game !== "GGTS")) return false;
+				if ((Item == null) || (Item.Asset == null) || (Item.Asset.Name == null)) return false;
+				if ((Item.Asset.Name.substr(0, 10) == "Futuristic") || (Item.Asset.Name == "FuckMachine")) return true;
+			} else {
+				if ((Item == null) || (Item.Asset == null) || (Item.Asset.Name == null)) return false;
+				if ((Item.Asset.Name.substr(0, 10) != "Futuristic") && (Item.Asset.Name != "FuckMachine")) return false;
+				if ((CurrentScreen == "ChatRoom") && (ChatRoomSpace == "Asylum")) return true;
+				if (CurrentScreen.substr(0, 6) == "Asylum") return true;
+			}
+			return false;
+		}
+
 	}
 	if (fcheatkeyOn) {
 		DialogHasKey = function(C, Item) {
