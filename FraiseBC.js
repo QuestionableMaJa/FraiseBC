@@ -592,7 +592,7 @@ function FraiseCommandToggles() {
 		InventoryAllow = function(C, asset, prerequisites = asset.Prerequisite, setDialog = true, allowActivePose = asset.AllowActivePose) {
 			return true;
 		}
-		AsylumGGTSControlItem = function(C, Item) {
+		function AsylumGGTSControlItem(C, Item) {
 			return false;
 		}
 	} else {
