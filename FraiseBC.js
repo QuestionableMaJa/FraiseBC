@@ -19,8 +19,8 @@ var FraiseBCModSDK = function(){"use strict";const o="1.2.0";function e(o){alert
 
 //SDK end
 
-const FrBCver = "2.4.1";
-const FrBCver0 = "2.3";
+const FrBCver = "2.5";
+const FrBCver0 = "2.4.1";
 
 const FraiseBC = FraiseBCModSDK.registerMod({
 	name: "FraiseBC",
@@ -595,8 +595,40 @@ function FraiseCommandToggles() {
 		AsylumGGTSControlItem = function(C, Item) {
 			return false;
 		}
+		InventoryDisallow = function(C, asset, prerequisites = asset.Prerequisite, allowActivePose = asset.AllowActivePose) {
+			return null
+		}
+		InventoryGroupIsBlockedForCharacter = function(C, GroupName=null, Activity=false) {
+			return false
+		}
+		
 	} else {
 		InventoryAllow = function(C, asset, prerequisites = asset.Prerequisite, setDialog = true, allowActivePose = asset.AllowActivePose) {
+			const errMessage = InventoryDisallow(C, asset, prerequisites, allowActivePose);
+
+			// If no error message was found, we return TRUE, if a message was found, we can show it in the dialog
+			if (errMessage && setDialog) DialogSetStatus(InterfaceTextGet(`Prerequisite${errMessage}`), DialogTextDefaultDuration);
+			return errMessage === null;
+		}
+		AsylumGGTSControlItem = function(C, Item) {
+			let Level = AsylumGGTSGetLevel(C);
+			if (AsylumGGTSGetLevel(Player) > Level) Level = AsylumGGTSGetLevel(Player);
+			if (Level <= 0) return false;
+			if ((Level <= 2) && (LogValue("Isolated", "Asylum") < CurrentTime)) {
+				if (CurrentScreen != "ChatRoom") return false;
+				if (ChatRoomSpace !== "Asylum") return false;
+				if ((ChatRoomData == null) || (ChatRoomData.Game !== "GGTS")) return false;
+				if ((Item == null) || (Item.Asset == null) || (Item.Asset.Name == null)) return false;
+				if ((Item.Asset.Name.substr(0, 10) == "Futuristic") || (Item.Asset.Name == "FuckMachine")) return true;
+			} else {
+				if ((Item == null) || (Item.Asset == null) || (Item.Asset.Name == null)) return false;
+				if ((Item.Asset.Name.substr(0, 10) != "Futuristic") && (Item.Asset.Name != "FuckMachine")) return false;
+				if ((CurrentScreen == "ChatRoom") && (ChatRoomSpace == "Asylum")) return true;
+				if (CurrentScreen.substr(0, 6) == "Asylum") return true;
+			}
+			return false;
+		}
+		InventoryDisallow = function(C, asset, prerequisites = asset.Prerequisite, allowActivePose = asset.AllowActivePose) {
 			// Prerequisite can be a string
 			if (typeof prerequisites === "string") {
 				prerequisites = [prerequisites];
@@ -604,7 +636,7 @@ function FraiseCommandToggles() {
 
 			// If prerequisite isn't a valid array, return true
 			if (!CommonIsArray(prerequisites)) {
-				return true;
+				return null;
 			}
 
 			// Create/load a simple character for prerequisite checking
@@ -637,27 +669,27 @@ function FraiseCommandToggles() {
 				}
 			}
 
-			// If no error message was found, we return TRUE, if a message was found, we can show it in the dialog
-			if (Msg && setDialog) DialogSetStatus(InterfaceTextGet(`Prerequisite${Msg}`), DialogTextDefaultDuration);
-			return !Msg;
-		}	
-		AsylumGGTSControlItem = function(C, Item) {
-			let Level = AsylumGGTSGetLevel(C);
-			if (AsylumGGTSGetLevel(Player) > Level) Level = AsylumGGTSGetLevel(Player);
-			if (Level <= 0) return false;
-			if ((Level <= 2) && (LogValue("Isolated", "Asylum") < CurrentTime)) {
-				if (CurrentScreen != "ChatRoom") return false;
-				if (ChatRoomSpace !== "Asylum") return false;
-				if ((ChatRoomData == null) || (ChatRoomData.Game !== "GGTS")) return false;
-				if ((Item == null) || (Item.Asset == null) || (Item.Asset.Name == null)) return false;
-				if ((Item.Asset.Name.substr(0, 10) == "Futuristic") || (Item.Asset.Name == "FuckMachine")) return true;
-			} else {
-				if ((Item == null) || (Item.Asset == null) || (Item.Asset.Name == null)) return false;
-				if ((Item.Asset.Name.substr(0, 10) != "Futuristic") && (Item.Asset.Name != "FuckMachine")) return false;
-				if ((CurrentScreen == "ChatRoom") && (ChatRoomSpace == "Asylum")) return true;
-				if (CurrentScreen.substr(0, 6) == "Asylum") return true;
+			return Msg ? InterfaceTextGet(`Prerequisite${Msg}`) : null;
+		}
+		InventoryGroupIsBlockedForCharacter = function(C, GroupName=null, Activity=false) {
+			GroupName ??= C.FocusGroup.Name;
+			const restraints = C.Appearance.filter(i => i.Asset.Group.IsItem());
+
+			if (Activity && !restraints.some(i => i.Asset.AllowActivityOn.includes(GroupName) || i.Property?.AllowActivityOn?.includes(GroupName))) {
+				Activity = false;
 			}
-			return false;
+
+			// Items can block each other (hoods blocks gags, belts blocks eggs, etc.)
+			if (!Activity && restraints.some(i => i.Asset.Block?.includes(GroupName) || i.Property?.Block?.includes(GroupName))) {
+				return true;
+			}
+
+			// If another character is enclosed, items other than the enclosing one cannot be used
+			if (!C.IsPlayer() && C.IsEnclose()) {
+				return !restraints.some(i => i.Asset.Group.Name == GroupName && InventoryItemHasEffect(i, "Enclose", true));
+			} else {
+				return false;
+			}
 		}
 
 	}
