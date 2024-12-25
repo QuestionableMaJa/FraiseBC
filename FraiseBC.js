@@ -601,6 +601,10 @@ function FraiseCommandToggles() {
 		InventoryGroupIsBlockedForCharacter = function(C, GroupName=null, Activity=false) {
 			return false
 		}
+		InventoryGroupIsBlocked = function(C, GroupName=null, Activity=false) {
+			return null
+		}
+
 		
 	} else {
 		InventoryAllow = function(C, asset, prerequisites = asset.Prerequisite, setDialog = true, allowActivePose = asset.AllowActivePose) {
@@ -691,6 +695,10 @@ function FraiseCommandToggles() {
 				return false;
 			}
 		}
+		InventoryGroupIsBlocked = function(C, GroupName=null, Activity=false) {
+			return InventoryGroupIsAvailable(C, GroupName, Activity) !== null;
+		}
+
 
 	}
 	if (fcheatkeyOn) {
