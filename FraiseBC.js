@@ -19,7 +19,7 @@ var FraiseBCModSDK = function(){"use strict";const o="1.2.0";function e(o){alert
 
 //SDK end
 
-const FrBCver = "2.5";
+const FrBCver = "2.5.1";
 const FrBCver0 = "2.4.1";
 
 const FraiseBC = FraiseBCModSDK.registerMod({
