@@ -19,7 +19,7 @@ setTimeout(
 			let m = document.createElement("script");
 			m.setAttribute("language", "JavaScript");
 			m.setAttribute("crossorigin", "anonymous");
-			m.setAttribute("src", "https://majanames.github.io/FraiseBC/FraiseBC.js?_=" + Date.now());
+			m.setAttribute("src", "https://questionablemaja.github.io/FraiseBC/FraiseBC.js?_=" + Date.now());
 			m.onload = () => m.remove();
 			document.head.appendChild(m);
 	}, 
