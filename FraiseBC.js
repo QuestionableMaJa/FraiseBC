@@ -454,11 +454,11 @@ CommandCombine([{
 
 function FraiseCommandToggles() {
 	if (fitemsOn) {
-	 FraiseBC.hookFunction(InventoryGroupIsBlocked = function(C, GroupName) {
+	 InventoryGroupIsBlocked = function(C, GroupName) {
 			return false;
-		});
+		}
 	} else {
-		FraiseBC.hookFunction(InventoryGroupIsBlocked = function(C, GroupName, Activity) {
+		InventoryGroupIsBlocked = function(C, GroupName, Activity) {
 
 		  // Checks for regular blocks
 		  if (InventoryGroupIsBlockedForCharacter(C, GroupName, Activity)) return true;
@@ -474,16 +474,16 @@ function FraiseCommandToggles() {
 
 		  // Nothing is preventing the group from being used
 		  return false;
-		});
+		}
 	}
 	if (finteractionOn) {
-		FraiseBC.hookFunction(Player.CanInteract = function() {
+		Player.CanInteract = function() {
 			return true;
-		});
+		}
 	} else {
-		FraiseBC.hookFunction(Player.CanInteract = function () {
+		Player.CanInteract = function () {
 			return !this.HasEffect("Block");
-		});
+		}
 	}
   if (fautostruggleOn) {
       StruggleStrengthGetDifficulty = function(C, PrevItem, NextItem) {
