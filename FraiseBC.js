@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name FraiseBC
 // @namespace https://www.bondageprojects.com/
-// @version 2.7
+// @version 2.7.1
 // @description A various silly scripts that Fraise makes
 // @author MaJaNamesuu
 // @match http://localhost:*/*
@@ -17,8 +17,8 @@
 //SDK start
 var FraiseBCModSDK=function(){"use strict";const o="1.2.0";function e(o){alert("Mod ERROR:\n"+o);const e=new Error(o);throw console.error(e),e}const t=new TextEncoder;function n(o){return!!o&&"object"==typeof o&&!Array.isArray(o)}function r(o){const e=new Set;return o.filter((o=>!e.has(o)&&e.add(o)))}const i=new Map,a=new Set;function c(o){a.has(o)||(a.add(o),console.warn(o))}function s(o){const e=[],t=new Map,n=new Set;for(const r of f.values()){const i=r.patching.get(o.name);if(i){e.push(...i.hooks);for(const[e,a]of i.patches.entries())t.has(e)&&t.get(e)!==a&&c(`ModSDK: Mod '${r.name}' is patching function ${o.name} with same pattern that is already applied by different mod, but with different pattern:\nPattern:\n${e}\nPatch1:\n${t.get(e)||""}\nPatch2:\n${a}`),t.set(e,a),n.add(r.name)}}e.sort(((o,e)=>e.priority-o.priority));const r=function(o,e){if(0===e.size)return o;let t=o.toString().replaceAll("\r\n","\n");for(const[n,r]of e.entries())t.includes(n)||c(`ModSDK: Patching ${o.name}: Patch ${n} not applied`),t=t.replaceAll(n,r);return(0,eval)(`(${t})`)}(o.original,t);let i=function(e){var t,i;const a=null===(i=(t=m.errorReporterHooks).hookChainExit)||void 0===i?void 0:i.call(t,o.name,n),c=r.apply(this,e);return null==a||a(),c};for(let t=e.length-1;t>=0;t--){const n=e[t],r=i;i=function(e){var t,i;const a=null===(i=(t=m.errorReporterHooks).hookEnter)||void 0===i?void 0:i.call(t,o.name,n.mod),c=n.hook.apply(this,[e,o=>{if(1!==arguments.length||!Array.isArray(e))throw new Error(`Mod ${n.mod} failed to call next hook: Expected args to be array, got ${typeof o}`);return r.call(this,o)}]);return null==a||a(),c}}return{hooks:e,patches:t,patchesSources:n,enter:i,final:r}}function l(o,e=!1){let r=i.get(o);if(r)e&&(r.precomputed=s(r));else{let e=window;const a=o.split(".");for(let t=0;t<a.length-1;t++)if(e=e[a[t]],!n(e))throw new Error(`ModSDK: Function ${o} to be patched not found; ${a.slice(0,t+1).join(".")} is not object`);const c=e[a[a.length-1]];if("function"!=typeof c)throw new Error(`ModSDK: Function ${o} to be patched not found`);const l=function(o){let e=-1;for(const n of t.encode(o)){let o=255&(e^n);for(let e=0;e<8;e++)o=1&o?-306674912^o>>>1:o>>>1;e=e>>>8^o}return((-1^e)>>>0).toString(16).padStart(8,"0").toUpperCase()}(c.toString().replaceAll("\r\n","\n")),d={name:o,original:c,originalHash:l};r=Object.assign(Object.assign({},d),{precomputed:s(d),router:()=>{},context:e,contextProperty:a[a.length-1]}),r.router=function(o){return function(...e){return o.precomputed.enter.apply(this,[e])}}(r),i.set(o,r),e[r.contextProperty]=r.router}return r}function d(){for(const o of i.values())o.precomputed=s(o)}function p(){const o=new Map;for(const[e,t]of i)o.set(e,{name:e,original:t.original,originalHash:t.originalHash,sdkEntrypoint:t.router,currentEntrypoint:t.context[t.contextProperty],hookedByMods:r(t.precomputed.hooks.map((o=>o.mod))),patchedByMods:Array.from(t.precomputed.patchesSources)});return o}const f=new Map;function u(o){f.get(o.name)!==o&&e(`Failed to unload mod '${o.name}': Not registered`),f.delete(o.name),o.loaded=!1,d()}function g(o,t){o&&"object"==typeof o||e("Failed to register mod: Expected info object, got "+typeof o),"string"==typeof o.name&&o.name||e("Failed to register mod: Expected name to be non-empty string, got "+typeof o.name);let r=`'${o.name}'`;"string"==typeof o.fullName&&o.fullName||e(`Failed to register mod ${r}: Expected fullName to be non-empty string, got ${typeof o.fullName}`),r=`'${o.fullName} (${o.name})'`,"string"!=typeof o.version&&e(`Failed to register mod ${r}: Expected version to be string, got ${typeof o.version}`),o.repository||(o.repository=void 0),void 0!==o.repository&&"string"!=typeof o.repository&&e(`Failed to register mod ${r}: Expected repository to be undefined or string, got ${typeof o.version}`),null==t&&(t={}),t&&"object"==typeof t||e(`Failed to register mod ${r}: Expected options to be undefined or object, got ${typeof t}`);const i=!0===t.allowReplace,a=f.get(o.name);a&&(a.allowReplace&&i||e(`Refusing to load mod ${r}: it is already loaded and doesn't allow being replaced.\nWas the mod loaded multiple times?`),u(a));const c=o=>{let e=g.patching.get(o.name);return e||(e={hooks:[],patches:new Map},g.patching.set(o.name,e)),e},s=(o,t)=>(...n)=>{var i,a;const c=null===(a=(i=m.errorReporterHooks).apiEndpointEnter)||void 0===a?void 0:a.call(i,o,g.name);g.loaded||e(`Mod ${r} attempted to call SDK function after being unloaded`);const s=t(...n);return null==c||c(),s},p={unload:s("unload",(()=>u(g))),hookFunction:s("hookFunction",((o,t,n)=>{"string"==typeof o&&o||e(`Mod ${r} failed to patch a function: Expected function name string, got ${typeof o}`);const i=l(o),a=c(i);"number"!=typeof t&&e(`Mod ${r} failed to hook function '${o}': Expected priority number, got ${typeof t}`),"function"!=typeof n&&e(`Mod ${r} failed to hook function '${o}': Expected hook function, got ${typeof n}`);const s={mod:g.name,priority:t,hook:n};return a.hooks.push(s),d(),()=>{const o=a.hooks.indexOf(s);o>=0&&(a.hooks.splice(o,1),d())}})),patchFunction:s("patchFunction",((o,t)=>{"string"==typeof o&&o||e(`Mod ${r} failed to patch a function: Expected function name string, got ${typeof o}`);const i=l(o),a=c(i);n(t)||e(`Mod ${r} failed to patch function '${o}': Expected patches object, got ${typeof t}`);for(const[n,i]of Object.entries(t))"string"==typeof i?a.patches.set(n,i):null===i?a.patches.delete(n):e(`Mod ${r} failed to patch function '${o}': Invalid format of patch '${n}'`);d()})),removePatches:s("removePatches",(o=>{"string"==typeof o&&o||e(`Mod ${r} failed to patch a function: Expected function name string, got ${typeof o}`);const t=l(o);c(t).patches.clear(),d()})),callOriginal:s("callOriginal",((o,t,n)=>{"string"==typeof o&&o||e(`Mod ${r} failed to call a function: Expected function name string, got ${typeof o}`);const i=l(o);return Array.isArray(t)||e(`Mod ${r} failed to call a function: Expected args array, got ${typeof t}`),i.original.apply(null!=n?n:globalThis,t)})),getOriginalHash:s("getOriginalHash",(o=>{"string"==typeof o&&o||e(`Mod ${r} failed to get hash: Expected function name string, got ${typeof o}`);return l(o).originalHash}))},g={name:o.name,fullName:o.fullName,version:o.version,repository:o.repository,allowReplace:i,api:p,loaded:!0,patching:new Map};return f.set(o.name,g),Object.freeze(p)}function h(){const o=[];for(const e of f.values())o.push({name:e.name,fullName:e.fullName,version:e.version,repository:e.repository});return o}let m;const y=void 0===window.bcModSdk?window.bcModSdk=function(){const e={version:o,apiVersion:1,registerMod:g,getModsInfo:h,getPatchingInfo:p,errorReporterHooks:Object.seal({apiEndpointEnter:null,hookEnter:null,hookChainExit:null})};return m=e,Object.freeze(e)}():(n(window.bcModSdk)||e("Failed to init Mod SDK: Name already in use"),1!==window.bcModSdk.apiVersion&&e(`Failed to init Mod SDK: Different version already loaded ('1.2.0' vs '${window.bcModSdk.version}')`),window.bcModSdk.version!==o&&alert(`Mod SDK warning: Loading different but compatible versions ('1.2.0' vs '${window.bcModSdk.version}')\nOne of mods you are using is using an old version of SDK. It will work for now but please inform author to update`),window.bcModSdk);return"undefined"!=typeof exports&&(Object.defineProperty(exports,"__esModule",{value:!0}),exports.default=y),y}();//SDK end
 //SDK end
-const FrBCver = "2.7";
-const FrBCver0 = "2.6";
+const FrBCver = "2.7.1";
+const FrBCver0 = "2.7";
 
 const FraiseBC = FraiseBCModSDK.registerMod({
 	name: "FraiseBC",
@@ -36,7 +36,7 @@ let fmaxzoomValue;
 let fcheatkeyOn;
 let spudfOn;
 let fautostruggleOn;
-let fmapvisibilityOn;
+
 
 function F_DataStore_initControls() {
 	var datas = JSON.parse(localStorage.getItem(F_DataStore_FraiseKey + "_" + Player.MemberNumber));
@@ -47,7 +47,6 @@ function F_DataStore_initControls() {
 		fcheatkeyOn = false;
 		spudfOn = false;
 		fautostruggleOn = false;
-        fmapvisibilityOn = false;
 		fmaxzoomValue = "";
 	} else {
 		fitemsOn = datas.fitemsOn;
@@ -55,7 +54,6 @@ function F_DataStore_initControls() {
 		fireignoreOn = datas.fireignoreOn;
 		fcheatkeyOn = datas.fcheatkeyOn;
 		spudfOn = datas.spudfOn;
-        fmapvisibilityOn = datas.fmapvisibilityOn;
 		fmaxzoomValue = datas.fmaxzoomValue;
     fautostruggleOn = datas.fautostruggleOn;
 	}
@@ -124,10 +122,6 @@ async function FDataStoreLoginListener() {
 			}
 			if (spudfOn == null || spudfOn == undefined) {
 				spudfOn = false;
-				F_DataStore_saveControls();
-			}
-            if (fmapvisibilityOn == null || fmapvisibilityOn == undefined) {
-				fmapvisibilityOn = false;
 				F_DataStore_saveControls();
 			}
 			if (fmaxzoomValue == null || fmaxzoomValue == undefined || fmaxzoomValue == "") {
@@ -207,15 +201,6 @@ function showfmaxzoomStatus() {
 		msg = "Zoom limit is set to 7";
 	} else {
 		msg = "Zoom limit is set to " + fmaxzoomValue;
-	}
-	F_DataStore_sendMessageToWearer(msg);
-}
-function showmapvisibilityStatus() {
-	let msg;
-	if (fmapvisibilityOn) {
-		msg = "/fmapvisibility is ++on++.";
-	} else {
-		msg = "/fmapvisibility is --off--.";
 	}
 	F_DataStore_sendMessageToWearer(msg);
 }
@@ -310,7 +295,6 @@ CommandCombine([{
 			"<b>fcheatkey</b> = allows allows to unlock (almost) any lock.\n" +
 			"<b>fstatus</b> = displays status of FraiseBC settings.\n" +
 			"<b>fautostruggle</b> = sets all struggle difficulty to 6(basically autoescape). \n" +
-            "<b>fmapvisibility</b> = lets you see everything in map rooms. \n" +
 			"<b>fenall</b> = enables all toggleable scripts On and Off</p>"
 		);
 	}
@@ -404,7 +388,6 @@ CommandCombine([{
 			finteractionOn = false;
 			fireignoreOn = false;
 			fcheatkeyOn = false;
-            fmapvisibilityOn = false;
 			F_DataStore_saveControls();
 			ChatRoomSendLocal(
 				"<p style='background-color:#81031b'><b>FraiseBC</b>: Every toggle is set to <b><i>--OFF--</i></b></p>"
@@ -414,7 +397,6 @@ CommandCombine([{
 			finteractionOn = true;
 			fireignoreOn = true;
 			fcheatkeyOn = true;
-            fmapvisibilityOn = true;
 			F_DataStore_saveControls();
 			ChatRoomSendLocal(
 				"<p style='background-color:#81031b'><b>FraiseBC</b>: Every toggle is set to <b><i>++ON++</i></b></p>"
@@ -464,27 +446,6 @@ CommandCombine([{
 			F_DataStore_saveControls();
 			ChatRoomSendLocal(
 				"<p style='background-color:#884571'><b>FraiseBC</b>: Difficulty of removing restraints is now 6.</p>"
-			)
-		}
-		FraiseCommandToggles();
-	}
-}])
-
-CommandCombine([{
-	Tag: 'fmapvisibility',
-	Description: ": allows to essentially bypass struggling(sets difficulty to 6 regardless of restraint).",
-	Action: () => {
-		if (fmapvisibilityOn === true) {
-			fmapvisibilityOn = false;
-			F_DataStore_saveControls();
-			ChatRoomSendLocal(
-				"<p style='background-color:#884571'><b>FraiseBC</b>: Your vision is back to normal</p>"
-			)
-		} else {
-			fmapvisibilityOn = true;
-			F_DataStore_saveControls();
-			ChatRoomSendLocal(
-				"<p style='background-color:#884571'><b>FraiseBC</b>: Now you can see everything in maps.</p>"
 			)
 		}
 		FraiseCommandToggles();
@@ -804,10 +765,9 @@ function FraiseCommandToggles() {
             }
             return deafLevel;
         }
-        GetDeafLevel0();
-        Player.GetDeafLevel = GetDeafLevel0;
+    GetDeafLevel0();
+	Player.GetDeafLevel = GetDeafLevel0;
 	}
-
 	if (fmaxzoomValue != null && fmaxzoomValue != undefined && fmaxzoomValue != "") {
 		var plx = fmaxzoomValue;
 		if ((plx > -1) && (plx < 51)) {
@@ -819,109 +779,4 @@ function FraiseCommandToggles() {
 			ChatRoomMapViewPerceptionRangeMax = plx;
 		}
 	}
-
-    if (fmapvisibilityOn) {
-        function ChatRoomMapViewCalculatePerceptionMasks() {
-            if (!Player.MapData) return;
-            
-            ChatRoomMapViewVisibilityMask.fill(true);
-            ChatRoomMapViewAudibilityMask.fill(true);
-            return;
-        }
-    } else {
-        function ChatRoomMapViewCalculatePerceptionMasks() {
-
-            // The player has never opened the map, ignore
-            if (!Player.MapData) return;
-
-            // When in edit mode or with active super powers, always show everything
-            if (ChatRoomMapViewHasSuperPowers()) {
-                ChatRoomMapViewVisibilityMask.fill(true);
-                ChatRoomMapViewAudibilityMask.fill(true);
-                return;
-            }
-
-            const mapLength = ChatRoomMapViewWidth * ChatRoomMapViewHeight;
-            const sightRange = ChatRoomMapViewGetSightRange();
-            const hearingRange = ChatRoomMapViewGetHearingRange();
-
-            for(let i=0; i<mapLength; i++) {
-                const posTile = ChatRoomMapViewIndexToCoordinates(i);
-                // Calculate the view line between player as f(x) = slopeX * x + yIntercept and f(y) = slopeY * y + xIntercept
-                let dirX = 0;
-                if(Player.MapData.Pos.X < posTile.x) { dirX = 1; }
-                else if(Player.MapData.Pos.X > posTile.x) { dirX = -1; }
-                let dirY = 0;
-                if(Player.MapData.Pos.Y < posTile.y) { dirY = 1; }
-                else if(Player.MapData.Pos.Y > posTile.y) { dirY = -1; }
-
-                const posTileCorner = { x: posTile.x + (dirX * ChatRoomMapViewPerceptionRaycastOffset), y: posTile.y - (dirY * ChatRoomMapViewPerceptionRaycastOffset) };
-                const slopeX = (posTileCorner.y - Player.MapData.Pos.Y) / (posTileCorner.x - Player.MapData.Pos.X);
-                const slopeY = (posTileCorner.x - Player.MapData.Pos.X) / (posTileCorner.y - Player.MapData.Pos.Y);
-                const yIntercept = Player.MapData.Pos.Y - (slopeX * Player.MapData.Pos.X);
-                const xIntercept = Player.MapData.Pos.X - (slopeY * Player.MapData.Pos.Y);
-
-                // Initialize this entry of visibility and audibility map with sight and hearing range
-                const distance = Math.max(Math.abs(Player.MapData.Pos.X - posTile.x), Math.abs(Player.MapData.Pos.Y - posTile.y));
-                ChatRoomMapViewVisibilityMask[i] = sightRange >= distance;
-                ChatRoomMapViewAudibilityMask[i] = hearingRange >= distance;
-
-                // Calculate obstacles in horizontality if horizontal slope is not too steep
-                if(slopeX != Infinity && dirX != 0)
-                {
-                    // Iterate over every x-position between player and target tile
-                    for(let x=Player.MapData.Pos.X+dirX; x!=posTile.x && x!=posTile.x+dirX; x+=dirX) {
-                        // If both, visibility and audibility masks already are set to false for this tile, we don't need to continue
-                        if(ChatRoomMapViewVisibilityMask[i] == false && ChatRoomMapViewAudibilityMask[i] == false) {
-                            break;
-                        }
-
-                        // Calculate the y-position with the view line formular and get the tiles and objecs on the in-between position
-                        const y = Math.round(slopeX * x + yIntercept);
-                        let tileData = ChatRoomMapViewGetTileAtPos(x, y);
-                        let objectData = ChatRoomMapViewGetObjectAtPos(x, y);
-                        // If tile data exists, apply the blockvision and blockhearing flags to visibility and audibility map
-                        if(tileData != null) {
-                            ChatRoomMapViewVisibilityMask[i] &&= tileData.BlockVision ? false : true;
-                            ChatRoomMapViewAudibilityMask[i] &&= tileData.BlockHearing ? false : true;
-                        }
-                        // If object data exists, apply the blockvision and blockhearing flags to visibility and audibility map
-                        if(objectData != null) {
-                            ChatRoomMapViewVisibilityMask[i] &&= objectData.BlockVision ? false : true;
-                            ChatRoomMapViewAudibilityMask[i] &&= objectData.BlockHearing ? false : true;
-                        }
-
-                    }
-                }
-                // Calculate obstacles in verticality if vertical slope is not too steep
-                if(slopeY != Infinity && dirY != 0)
-                {
-                    // Iterate over every y-position between player and target tile
-                    for(let y=Player.MapData.Pos.Y+dirY; y!=posTile.y && y!=posTile.y+dirY; y+=dirY) {
-                        // If both, visibility and audibility masks already are set to false for this tile, we don't need to continue
-                        if(ChatRoomMapViewVisibilityMask[i] == false && ChatRoomMapViewAudibilityMask[i] == false) {
-                            break;
-                        }
-
-                        // Calculate the x-position with the view line formular and get the tiles and objecs on the in-between position
-                        const x = Math.round(slopeY * y + xIntercept);
-                        let tileData = ChatRoomMapViewGetTileAtPos(x, y);
-                        let objectData = ChatRoomMapViewGetObjectAtPos(x, y);
-                        // If tile data exists, apply the blockvision and blockhearing flags to visibility and audibility map
-                        if(tileData != null) {
-                            ChatRoomMapViewVisibilityMask[i] &&= tileData.BlockVision ? false : true;
-                            ChatRoomMapViewAudibilityMask[i] &&= tileData.BlockHearing ? false : true;
-                        }
-                        // If object data exists, apply the blockvision and blockhearing flags to visibility and audibility map
-                        if(objectData != null) {
-                            ChatRoomMapViewVisibilityMask[i] &&= objectData.BlockVision ? false : true;
-                            ChatRoomMapViewAudibilityMask[i] &&= objectData.BlockHearing ? false : true;
-                        }
-
-                    }
-                }
-
-            }
-        }
-    }
 }
