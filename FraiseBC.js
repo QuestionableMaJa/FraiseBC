@@ -404,6 +404,7 @@ CommandCombine([{
 			finteractionOn = false;
 			fireignoreOn = false;
 			fcheatkeyOn = false;
+            fmapvisibilityOn = false;
 			F_DataStore_saveControls();
 			ChatRoomSendLocal(
 				"<p style='background-color:#81031b'><b>FraiseBC</b>: Every toggle is set to <b><i>--OFF--</i></b></p>"
@@ -413,6 +414,7 @@ CommandCombine([{
 			finteractionOn = true;
 			fireignoreOn = true;
 			fcheatkeyOn = true;
+            fmapvisibilityOn = true;
 			F_DataStore_saveControls();
 			ChatRoomSendLocal(
 				"<p style='background-color:#81031b'><b>FraiseBC</b>: Every toggle is set to <b><i>++ON++</i></b></p>"
